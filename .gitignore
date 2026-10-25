@@ -1,0 +1,21 @@
+## Build and Release Folders
+bin/
+obj/
+out/
+
+## Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Node / Frontend (for future frontend)
+node_modules/
+dist/
+.next/
+.nuxt/
+
+## OS generated files
+.DS_Store
+Thumbs.db
