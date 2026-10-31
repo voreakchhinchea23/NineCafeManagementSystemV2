@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using NineCafeApi.Models;
 
 namespace NineCafeApi.Data
@@ -14,21 +14,22 @@ namespace NineCafeApi.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<RolePermission> RolePermissions { get; set; }
+        public DbSet<UserRole> UserRoles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // 1. RolePermission Primary Key (Id)
+            // ==========================================
+            // 1. RolePermission (Role <-> Permission)
+            // ==========================================
             modelBuilder.Entity<RolePermission>()
                 .HasKey(rp => rp.Id);
 
-            // 2. Prevent duplicate permissions on the same role
             modelBuilder.Entity<RolePermission>()
                 .HasIndex(rp => new { rp.RoleId, rp.PermissionId })
                 .IsUnique();
 
-            // 3. Foreign Key Relationships for RolePermission
             modelBuilder.Entity<RolePermission>()
                 .HasOne(rp => rp.Role)
                 .WithMany(r => r.RolePermissions)
@@ -41,14 +42,40 @@ namespace NineCafeApi.Data
                 .HasForeignKey(rp => rp.PermissionId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // 4. Prevent deleting a Role if Users still belong to it
-            modelBuilder.Entity<User>()
-                .HasOne(u => u.Role)
-                .WithMany(r => r.Users)
-                .HasForeignKey(u => u.RoleId)
+            // ==========================================
+            // 2. UserRole (User <-> Role)
+            // ==========================================
+            modelBuilder.Entity<UserRole>()
+                .HasKey(ur => ur.Id);
+
+            // A user can only be assigned to a specific role once
+            modelBuilder.Entity<UserRole>()
+                .HasIndex(ur => new { ur.UserId, ur.RoleId })
+                .IsUnique();
+
+            modelBuilder.Entity<UserRole>()
+                .HasOne(ur => ur.User)
+                .WithMany(u => u.UserRoles)
+                .HasForeignKey(ur => ur.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<UserRole>()
+                .HasOne(ur => ur.Role)
+                .WithMany(r => r.UserRoles)
+                .HasForeignKey(ur => ur.RoleId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // 5. Unique Indexes
+            // ==========================================
+            // 3. Unique Constraints & Defaults
+            // ==========================================
+            modelBuilder.Entity<User>()
+                .Property(u => u.PublicId)
+                .HasDefaultValueSql("NEWID()");
+
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.PublicId)
+                .IsUnique();
+
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Username)
                 .IsUnique();

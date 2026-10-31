@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using NineCafeApi.Data;
 using NineCafeApi.DTOs.Users;
 using NineCafeApi.Models;
@@ -18,17 +18,18 @@ namespace NineCafeApi.Services.Users
         public async Task<IEnumerable<UserResponseDto>> GetUsersAsync()
         {
             return await _context.Users
-                .Include(u => u.Role)
+                .Include(u => u.UserRoles)
+                    .ThenInclude(ur => ur.Role)
                 .Select(u => new UserResponseDto
                 {
-                    Id = u.Id,
+                    Id = u.PublicId,
                     Username = u.Username,
                     FullName = u.FullName,
                     Email = u.Email,
                     PhoneNumber = u.PhoneNumber,
                     IsActive = u.IsActive,
-                    RoleId = u.RoleId,
-                    RoleName = u.Role != null ? u.Role.Name : "No Role",
+                    RoleId = u.UserRoles.Select(ur => ur.RoleId).FirstOrDefault(),
+                    RoleName = u.UserRoles.Select(ur => ur.Role!.Name).FirstOrDefault() ?? "No Role",
                     CreatedAt = u.CreatedAt,
                     UpdatedAt = u.UpdatedAt
                 })
@@ -36,24 +37,27 @@ namespace NineCafeApi.Services.Users
         }
 
         // GET USER BY ID
-        public async Task<UserResponseDto?> GetUserByIdAsync(int id)
+        public async Task<UserResponseDto?> GetUserByIdAsync(Guid id)
         {
             var user = await _context.Users
-                .Include(u => u.Role)
-                .FirstOrDefaultAsync(u => u.Id == id);
+                .Include(u => u.UserRoles)
+                    .ThenInclude(ur => ur.Role)
+                .FirstOrDefaultAsync(u => u.PublicId == id);
 
             if (user == null) return null;
 
+            var userRole = user.UserRoles.FirstOrDefault();
+
             return new UserResponseDto
             {
-                Id = user.Id,
+                Id = user.PublicId,
                 Username = user.Username,
                 FullName = user.FullName,
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
                 IsActive = user.IsActive,
-                RoleId = user.RoleId,
-                RoleName = user.Role != null ? user.Role.Name : "No Role",
+                RoleId = userRole?.RoleId ?? 0,
+                RoleName = userRole?.Role?.Name ?? "No Role",
                 CreatedAt = user.CreatedAt,
                 UpdatedAt = user.UpdatedAt
             };
@@ -88,9 +92,8 @@ namespace NineCafeApi.Services.Users
                 throw new InvalidOperationException($"Email '{dto.Email}' is already registered.");
             }
             
-            // 4.Check PhoneNumber uniqueness
+            // 4. Check PhoneNumber uniqueness
             var trimmedPhone = dto.PhoneNumber.Trim();
-
             var phoneExists = await _context.Users
                 .AnyAsync(u => u.PhoneNumber == trimmedPhone);
             if (phoneExists)
@@ -101,18 +104,21 @@ namespace NineCafeApi.Services.Users
             // 5. Hash password with BCrypt
             string passwordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
 
-
             var user = new User
             {
+                PublicId = Guid.NewGuid(),
                 Username = trimmedUsername,
                 FullName = dto.FullName.Trim(),
                 Email = trimmedEmail,
                 PasswordHash = passwordHash,
-                PhoneNumber = trimmedPhone, 
-                RoleId = dto.RoleId,
+                PhoneNumber = trimmedPhone,
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
+                UpdatedAt = DateTime.UtcNow,
+                UserRoles = new List<UserRole>
+                {
+                    new UserRole { RoleId = dto.RoleId }
+                }
             };
 
             _context.Users.Add(user);
@@ -120,13 +126,13 @@ namespace NineCafeApi.Services.Users
 
             return new UserResponseDto
             {
-                Id = user.Id,
+                Id = user.PublicId,
                 Username = user.Username,
                 FullName = user.FullName,
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
                 IsActive = user.IsActive,
-                RoleId = user.RoleId,
+                RoleId = dto.RoleId,
                 RoleName = role.Name,
                 CreatedAt = user.CreatedAt,
                 UpdatedAt = user.UpdatedAt
@@ -134,9 +140,11 @@ namespace NineCafeApi.Services.Users
         }
 
         // UPDATE USER (Profile info, Role, Status)
-        public async Task<bool> UpdateUserAsync(int id, UpdateUserDto dto)
+        public async Task<bool> UpdateUserAsync(Guid id, UpdateUserDto dto)
         {
-            var user = await _context.Users.FindAsync(id);
+            var user = await _context.Users
+                .Include(u => u.UserRoles)
+                .FirstOrDefaultAsync(u => u.PublicId == id);
             if (user == null) return false;
 
             var trimmedEmail = dto.Email.Trim().ToLower();
@@ -148,11 +156,11 @@ namespace NineCafeApi.Services.Users
             if (!roleExists)
             {
                 throw new KeyNotFoundException($"Role with ID {dto.RoleId} does not exist.");
-
             }
+
             // 2. Check Email uniqueness on other users
             var emailExists = await _context.Users
-                .AnyAsync(u => u.Id != id && u.Email.ToLower() == trimmedEmail);
+                .AnyAsync(u => u.PublicId != id && u.Email.ToLower() == trimmedEmail);
             if (emailExists)
             {
                 throw new InvalidOperationException($"Email '{dto.Email}' is already registered to another user.");
@@ -160,18 +168,29 @@ namespace NineCafeApi.Services.Users
 
             // 3. Check if any other user has this phone number
             var phoneExists = await _context.Users
-                .AnyAsync(u => u.Id != id && u.PhoneNumber == trimmedPhone);
+                .AnyAsync(u => u.PublicId != id && u.PhoneNumber == trimmedPhone);
             if (phoneExists)
             {
                 throw new InvalidOperationException($"Phone number '{dto.PhoneNumber}' is already in use by another user.");
             }
 
-            //4.CHECK USERNAME UNIQUENESS(Excluding current user)
+            // 4. Check if any other user has this username
             var usernameExists = await _context.Users
-                .AnyAsync(u => u.Id != id && u.Username.ToLower() == trimmedUsername.ToLower());
+                .AnyAsync(u => u.PublicId != id && u.Username.ToLower() == trimmedUsername.ToLower());
             if (usernameExists)
             {
                 throw new InvalidOperationException($"Username '{dto.Username}' is already taken by another user.");
+            }
+
+            // Update the single role
+            var existingUserRole = user.UserRoles.FirstOrDefault();
+            if (existingUserRole == null)
+            {
+                user.UserRoles.Add(new UserRole { RoleId = dto.RoleId });
+            }
+            else
+            {
+                existingUserRole.RoleId = dto.RoleId;
             }
 
             user.Username = trimmedUsername;
@@ -179,7 +198,6 @@ namespace NineCafeApi.Services.Users
             user.Email = trimmedEmail;
             user.PhoneNumber = trimmedPhone;
             user.IsActive = dto.IsActive;
-            user.RoleId = dto.RoleId;
             user.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
@@ -187,18 +205,22 @@ namespace NineCafeApi.Services.Users
         }
 
         // DELETE USER (With Last Admin Protection)
-        public async Task<bool> DeleteUserAsync(int id)
+        public async Task<bool> DeleteUserAsync(Guid id)
         {
             var user = await _context.Users
-                .Include(u => u.Role)
-                .FirstOrDefaultAsync(u => u.Id == id);
+                .Include(u => u.UserRoles)
+                    .ThenInclude(ur => ur.Role)
+                .FirstOrDefaultAsync(u => u.PublicId == id);
 
             if (user == null) return false;
 
             // Safety rule: Prevent deleting the last Admin account
-            if (user.Role?.Name == "Admin")
+            bool isAdmin = user.UserRoles.Any(ur => ur.Role?.Name == "Admin");
+            if (isAdmin)
             {
-                var adminCount = await _context.Users.CountAsync(u => u.Role!.Name == "Admin");
+                var adminCount = await _context.UserRoles
+                    .CountAsync(ur => ur.Role!.Name == "Admin");
+
                 if (adminCount <= 1)
                 {
                     throw new InvalidOperationException("Action denied: Cannot delete the last remaining Administrator account.");
@@ -211,9 +233,9 @@ namespace NineCafeApi.Services.Users
         }
 
         // CHANGE PASSWORD
-        public async Task<bool> ChangePasswordAsync(int id, ChangePasswordDto dto)
+        public async Task<bool> ChangePasswordAsync(Guid id, ChangePasswordDto dto)
         {
-            var user = await _context.Users.FindAsync(id);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.PublicId == id);
             if (user == null) return false;
 
             // Verify current password

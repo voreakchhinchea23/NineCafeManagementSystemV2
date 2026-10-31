@@ -5,6 +5,7 @@ namespace NineCafeApi.Models
     public class User 
     {
         public int Id { get; set; }
+        public Guid PublicId { get; set; } = Guid.NewGuid();
 
         [Required]
         [StringLength(100)]
@@ -31,9 +32,8 @@ namespace NineCafeApi.Models
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
-        // Foreign key to Role
-        public int RoleId { get; set; }
-        public Role? Role { get; set; }
+        // Navigation Property for UserRole
+        public ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
     }
 }
 

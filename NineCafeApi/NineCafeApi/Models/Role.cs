@@ -18,8 +18,8 @@ namespace NineCafeApi.Models
 
         // Navigation property for RolePermission
         public ICollection<RolePermission> RolePermissions { get; set; } = new List<RolePermission>();
-        // Navigation property for Users
-        public ICollection<User> Users { get; set; } = new List<User>();
+        // Navigation property for UserRole
+        public ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
     }
 }
 

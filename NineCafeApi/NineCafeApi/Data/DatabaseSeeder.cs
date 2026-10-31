@@ -127,11 +127,14 @@ namespace NineCafeApi.Data
                     FullName = "System Admin",
                     Email = "admin@ninecafe.local",
                     PasswordHash = passwordHash,
-                    PhoneNumber = "012441593",
+                    PhoneNumber = "012345678",
                     IsActive = true,
-                    RoleId = adminRole.Id, // Link directly to Admin role
                     CreatedAt = DateTime.UtcNow,
-                    UpdatedAt = DateTime.UtcNow
+                    UpdatedAt = DateTime.UtcNow,
+                    UserRoles = new List<UserRole>
+                    {
+                        new UserRole { RoleId = adminRole.Id }
+                    }
                 };
 
                 context.Users.Add(adminUser);

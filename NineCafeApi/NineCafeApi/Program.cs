@@ -1,10 +1,8 @@
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using NineCafeApi.Authorization;
 using NineCafeApi.Authorization;
 using NineCafeApi.Data;
 using NineCafeApi.Services.Auth;

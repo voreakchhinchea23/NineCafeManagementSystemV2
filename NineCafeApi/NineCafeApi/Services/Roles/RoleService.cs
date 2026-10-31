@@ -127,7 +127,7 @@ namespace NineCafeApi.Services.Roles
             if (role == null) return false;
 
             // Prevent deleting role if users are still assigned to it
-            var hasAssignedUsers = await _context.Users.AnyAsync(u => u.RoleId == id);
+            var hasAssignedUsers = await _context.UserRoles.AnyAsync(u => u.RoleId == id);
             if (hasAssignedUsers)
             {
                 throw new InvalidOperationException("Cannot delete this role because users are currently assigned to it.");

@@ -21,11 +21,12 @@ namespace NineCafeApi.Services.Auth
 
         public async Task<AuthResponseDto?> LoginAsync(LoginDto dto)
         {
-            // 1. Find user by username with Role and Permissions
+            // 1. Find user by username with UserRole -> Role -> Permissions
             var user = await _context.Users
-                .Include(u => u.Role)
-                    .ThenInclude(r => r!.RolePermissions)
-                        .ThenInclude(rp => rp.Permission)
+                .Include(u => u.UserRoles)
+                    .ThenInclude(ur => ur.Role)
+                        .ThenInclude(r => r!.RolePermissions)
+                            .ThenInclude(rp => rp.Permission)
                 .FirstOrDefaultAsync(u => u.Username.ToLower() == dto.Username.Trim().ToLower());
 
             if (user == null || !user.IsActive)
@@ -33,15 +34,18 @@ namespace NineCafeApi.Services.Auth
                 return null;
             }
 
-            // 2. Verify password with BCrypt (using user.PasswordHash)
+            // 2. Verify password with BCrypt
             bool isPasswordValid = BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash);
             if (!isPasswordValid)
             {
                 return null;
             }
 
-            // 3. Collect permission names
-            var permissions = user.Role?.RolePermissions
+            // 3. Extract the single role & permissions
+            var role = user.UserRoles.FirstOrDefault()?.Role;
+            var roleName = role?.Name ?? "NoRole";
+
+            var permissions = role?.RolePermissions
                 .Where(rp => rp.Permission != null)
                 .Select(rp => rp.Permission!.Name)
                 .ToList() ?? new List<string>();
@@ -49,10 +53,10 @@ namespace NineCafeApi.Services.Auth
             // 4. Build JWT claims
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, user.PublicId.ToString()),
                 new Claim(ClaimTypes.Name, user.Username),
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Role?.Name ?? "NoRole")
+                new Claim(ClaimTypes.Role, roleName)
             };
 
             // Add each permission as a "permission" claim
@@ -80,10 +84,10 @@ namespace NineCafeApi.Services.Auth
             {
                 Token = tokenString,
                 Expiration = expires,
-                UserId = user.Id,
+                UserId = user.PublicId,
                 Username = user.Username,
                 FullName = user.FullName,
-                Role = user.Role?.Name ?? "NoRole",
+                Role = roleName,
                 Permissions = permissions
             };
         }
