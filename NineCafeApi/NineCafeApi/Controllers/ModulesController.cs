@@ -8,7 +8,7 @@ using NineCafeApi.Authorization;
 
 [Route("api/[controller]")]
 [ApiController]
-[HasPermission(Perm.MODULE_READ)]
+// [HasPermission(Perm.MODULE_READ)]
 public class ModulesController : ControllerBase
 {
     private readonly IModuleService _moduleService;
@@ -41,7 +41,7 @@ public class ModulesController : ControllerBase
 
     // PUT: api/Modules/5
     [HttpPut("{id}")]
-    [HasPermission(Perm.MODULE_UPDATE)]
+    // [HasPermission(Perm.MODULE_UPDATE)]
     public async Task<ActionResult<ModuleResponseDto>> PutModule(int id, [FromBody] CreateModuleDto dto)
     {
         var updatedModule = await _moduleService.UpdateAsync(id, dto);
@@ -54,7 +54,7 @@ public class ModulesController : ControllerBase
 
     // POST: api/Modules
     [HttpPost]
-    [HasPermission(Perm.MODULE_CREATE)]
+    // [HasPermission(Perm.MODULE_CREATE)]
     public async Task<ActionResult<ModuleResponseDto>> PostModule([FromBody] CreateModuleDto dto)
     {
         try
@@ -71,7 +71,7 @@ public class ModulesController : ControllerBase
 
     // DELETE: api/Modules/5
     [HttpDelete("{id}")]
-    [HasPermission(Perm.MODULE_DELETE)]
+    // [HasPermission(Perm.MODULE_DELETE)]
     public async Task<IActionResult> DeleteModule(int id)
     {
         var success = await _moduleService.DeleteAsync(id);

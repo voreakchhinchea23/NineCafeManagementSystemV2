@@ -15,6 +15,10 @@ namespace NineCafeApi.Data
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<RolePermission> RolePermissions { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
+        public DbSet<Price> Prices { get; set; }
+        public DbSet<Withdrawal> Withdrawals { get; set; }
+        public DbSet<Debt> Debts { get; set; }
+        public DbSet<Expense> Expenses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -99,6 +103,15 @@ namespace NineCafeApi.Data
             modelBuilder.Entity<Module>()
                 .HasIndex(m => m.Name)
                 .IsUnique();
+
+            // ==========================================
+            // 4. Expense (User -> Expenses)
+            // ==========================================
+            modelBuilder.Entity<Expense>()
+                .HasOne(e => e.User)
+                .WithMany(u => u.Expenses)
+                .HasForeignKey(e => e.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

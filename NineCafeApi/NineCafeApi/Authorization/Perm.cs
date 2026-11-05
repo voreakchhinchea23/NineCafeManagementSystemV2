@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 
 namespace NineCafeApi.Authorization
 {
@@ -29,7 +29,26 @@ namespace NineCafeApi.Authorization
         public const string MODULE_CREATE = "module.create";
         public const string MODULE_UPDATE = "module.update";
         public const string MODULE_DELETE = "module.delete";
-        
+
+        // PRICE
+        public const string PRICE_READ = "price.read";
+        public const string PRICE_CREATE = "price.create";
+        public const string PRICE_UPDATE = "price.update";
+        public const string PRICE_DELETE = "price.delete";
+
+        // DEBT
+        public const string DEBT_READ = "debt.read";
+        public const string DEBT_CREATE = "debt.create";
+        public const string DEBT_UPDATE = "debt.update";
+        public const string DEBT_DELETE = "debt.delete";
+
+        // EXPENSE
+        public const string EXPENSE_READ = "expense.read";
+        public const string EXPENSE_CREATE = "expense.create";
+        public const string EXPENSE_UPDATE = "expense.update";
+        public const string EXPENSE_DELETE = "expense.delete";
+
+
 
         // Helper to retrieve all permission constants (useful for seeding DB)
         public static IReadOnlyList<string> GetAll()

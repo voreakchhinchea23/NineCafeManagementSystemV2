@@ -8,8 +8,12 @@ using NineCafeApi.Data;
 using NineCafeApi.Services.Auth;
 using NineCafeApi.Services.Modules;
 using NineCafeApi.Services.Permissions;
+using NineCafeApi.Services.Prices;
 using NineCafeApi.Services.Roles;
 using NineCafeApi.Services.Users;
+using NineCafeApi.Services.Debts;
+using NineCafeApi.Services.Expenses;
+using NineCafeApi.Services.Withdrawals;
 using Scalar.AspNetCore;
 using System.Text;
 
@@ -76,6 +80,11 @@ namespace NineCafeApi
             builder.Services.AddScoped<IPermissionService, PermissionService>();
             builder.Services.AddScoped<IRoleService, RoleService>();
             builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IPriceService, PriceService>();
+            builder.Services.AddScoped<IWithdrawalService, WithdrawalService>();
+            builder.Services.AddScoped<IDebtService, DebtService>();
+            builder.Services.AddScoped<IExpenseService, ExpenseService>();
+
             // 7. OpenAPI & Scalar Documentation
             builder.Services.AddOpenApi();
             var app = builder.Build();

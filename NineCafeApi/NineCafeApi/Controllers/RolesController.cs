@@ -8,7 +8,7 @@ using NineCafeApi.Services.Roles;
 
 [Route("api/[controller]")]
 [ApiController]
-[HasPermission(Perm.ROLE_READ)]
+// [HasPermission(Perm.ROLE_READ)]
 public class RolesController : ControllerBase
 {
     private readonly IRoleService _roleService;
@@ -40,7 +40,7 @@ public class RolesController : ControllerBase
 
     // POST: api/roles
     [HttpPost]
-    [HasPermission(Perm.ROLE_CREATE)]
+    // [HasPermission(Perm.ROLE_CREATE)]
     public async Task<ActionResult<RoleResponseDto>> CreateRole([FromBody] CreateRoleDto dto)
     {
         try
@@ -55,7 +55,7 @@ public class RolesController : ControllerBase
     }
     // PUT: api/roles/5
     [HttpPut("{id:int}")]
-    [HasPermission(Perm.ROLE_UPDATE)]
+    // [HasPermission(Perm.ROLE_UPDATE)]
     public async Task<ActionResult> UpdateRole(int id, [FromBody] CreateRoleDto dto)
     {
         try
@@ -74,7 +74,7 @@ public class RolesController : ControllerBase
     }
     // DELETE: api/roles/5
     [HttpDelete("{id:int}")]
-    [HasPermission(Perm.ROLE_DELETE)]
+    // [HasPermission(Perm.ROLE_DELETE)]
     public async Task<ActionResult> DeleteRole(int id)
     {
         try
@@ -94,7 +94,7 @@ public class RolesController : ControllerBase
 
     // POST: api/roles/assign-permissions
     [HttpPost("assign-permissions")]
-    [HasPermission(Perm.ROLE_ASSIGN_PERMISSION)]
+    // [HasPermission(Perm.ROLE_ASSIGN_PERMISSION)]
     public async Task<ActionResult> AssignPermissions([FromBody] AssignPermissionsToRoleDto dto)
     {
         var success = await _roleService.AssignPermissionToRoleAsync(dto);
@@ -107,7 +107,7 @@ public class RolesController : ControllerBase
 
     // POST: api/roles/1/permissions/5
     [HttpPost("{roleId:int}/permissions/{permissionId:int}")]
-    [HasPermission(Perm.ROLE_ASSIGN_PERMISSION)]
+    // [HasPermission(Perm.ROLE_ASSIGN_PERMISSION)]
     public async Task<ActionResult> AddSinglePermission(int roleId, int permissionId)
     {
         var success = await _roleService.AddSinglePermissionAsync(roleId, permissionId);
@@ -120,7 +120,7 @@ public class RolesController : ControllerBase
 
     // DELETE: api/roles/1/permissions/5
     [HttpDelete("{roleId:int}/permissions/{permissionId:int}")]
-    [HasPermission(Perm.ROLE_ASSIGN_PERMISSION)]
+    // [HasPermission(Perm.ROLE_ASSIGN_PERMISSION)]
     public async Task<ActionResult> RemoveSinglePermission(int roleId, int permissionId)
     {
         var success = await _roleService.RemoveSinglePermissionAsync(roleId, permissionId);
