@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using NineCafeApi.Data;
 using NineCafeApi.DTOs.Permissions;
 using NineCafeApi.DTOs.Roles;
@@ -25,7 +25,20 @@ namespace NineCafeApi.Services.Roles
                     Name = r.Name,
                     Description = r.Description,
                     CreatedAt = r.CreatedAt,
-                    UpdatedAt = r.UpdatedAt
+                    UpdatedAt = r.UpdatedAt,
+                    Permissions = r.RolePermissions
+                        .Where(rp => rp.Permission != null)
+                        .Select(rp => new PermissionResponseDto
+                        {
+                            Id = rp.Permission!.Id,
+                            Name = rp.Permission.Name,
+                            Description = rp.Permission.Description,
+                            ModuleId = rp.Permission.ModuleId,
+                            ModuleName = rp.Permission.Module != null ? rp.Permission.Module.Name : string.Empty,
+                            CreatedAt = rp.Permission.CreatedAt,
+                            UpdatedAt = rp.Permission.UpdatedAt
+                        })
+                        .ToList()
                 })
                 .ToListAsync();
         }

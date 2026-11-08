@@ -48,6 +48,24 @@ namespace NineCafeApi.Authorization
         public const string EXPENSE_UPDATE = "expense.update";
         public const string EXPENSE_DELETE = "expense.delete";
 
+        // DASHBOARD
+        public const string DASHBOARD_READ = "dashboard.read";
+        public const string DASHBOARD_CREATE = "dashboard.create";
+        public const string DASHBOARD_UPDATE = "dashboard.update";
+        public const string DASHBOARD_DELETE = "dashboard.delete";
+
+        // REPORT
+        public const string REPORT_READ = "report.read";
+
+        // SUPPLIER
+        public const string SUPPLIER_READ = "supplier.read";
+        public const string SUPPLIER_CREATE = "supplier.create";
+        public const string SUPPLIER_UPDATE = "supplier.update";
+        public const string SUPPLIER_DELETE = "supplier.delete";
+
+        // AUDIT
+        public const string AUDIT_READ = "audit.read";
+
 
 
         // Helper to retrieve all permission constants (useful for seeding DB)

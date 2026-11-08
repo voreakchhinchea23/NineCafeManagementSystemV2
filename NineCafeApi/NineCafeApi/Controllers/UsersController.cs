@@ -8,7 +8,7 @@ namespace NineCafeApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    // [HasPermission(Perm.USER_READ)]
+    [HasPermission(Perm.USER_READ)]
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -40,7 +40,7 @@ namespace NineCafeApi.Controllers
 
         // POST: api/users
         [HttpPost]
-        // [HasPermission(Perm.USER_CREATE)]
+        [HasPermission(Perm.USER_CREATE)]
         public async Task<ActionResult<UserResponseDto>> CreateUser([FromBody] CreateUserDto dto)
         {
             try
@@ -60,7 +60,7 @@ namespace NineCafeApi.Controllers
 
         // PUT: api/users/c3b2f518-8a21-4f12-9c1a-7b3b4f98d123
         [HttpPut("{id:guid}")]
-        // [HasPermission(Perm.USER_UPDATE)]
+        [HasPermission(Perm.USER_UPDATE)]
         public async Task<ActionResult> UpdateUser(Guid id, [FromBody] UpdateUserDto dto)
         {
             try
@@ -84,7 +84,7 @@ namespace NineCafeApi.Controllers
 
         // DELETE: api/users/c3b2f518-8a21-4f12-9c1a-7b3b4f98d123
         [HttpDelete("{id:guid}")]
-        // [HasPermission(Perm.USER_DELETE)]
+        [HasPermission(Perm.USER_DELETE)]
         public async Task<ActionResult> DeleteUser(Guid id)
         {
             // Prevent self-deletion if authenticated
@@ -111,7 +111,7 @@ namespace NineCafeApi.Controllers
 
         // PUT: api/users/c3b2f518-8a21-4f12-9c1a-7b3b4f98d123/change-password
         [HttpPut("{id:guid}/change-password")]
-        // [HasPermission(Perm.USER_CHANGE_PASSWORD)]
+        [HasPermission(Perm.USER_CHANGE_PASSWORD)]
         public async Task<ActionResult> ChangePassword(Guid id, [FromBody] ChangePasswordDto dto)
         {
             try

@@ -6,10 +6,14 @@ using Microsoft.IdentityModel.Tokens;
 using NineCafeApi.Authorization;
 using NineCafeApi.Data;
 using NineCafeApi.Services.Auth;
+using NineCafeApi.Services.AuditLogs;
+using NineCafeApi.Services.Dashboard;
 using NineCafeApi.Services.Modules;
 using NineCafeApi.Services.Permissions;
 using NineCafeApi.Services.Prices;
+using NineCafeApi.Services.Reports;
 using NineCafeApi.Services.Roles;
+using NineCafeApi.Services.Suppliers;
 using NineCafeApi.Services.Users;
 using NineCafeApi.Services.Debts;
 using NineCafeApi.Services.Expenses;
@@ -26,6 +30,16 @@ namespace NineCafeApi
             var builder = WebApplication.CreateBuilder(args);
             // 1. Add Controllers
             builder.Services.AddControllers();
+            // Enable CORS for Frontend
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowFrontend", policy =>
+                {
+                    policy.AllowAnyOrigin()
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                });
+            });
             // 2. Register DbContext
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -84,6 +98,11 @@ namespace NineCafeApi
             builder.Services.AddScoped<IWithdrawalService, WithdrawalService>();
             builder.Services.AddScoped<IDebtService, DebtService>();
             builder.Services.AddScoped<IExpenseService, ExpenseService>();
+            builder.Services.AddScoped<IDashboardService, DashboardService>();
+            builder.Services.AddScoped<IReportService, ReportService>();
+            builder.Services.AddScoped<ISupplierService, SupplierService>();
+            builder.Services.AddHttpContextAccessor();
+            builder.Services.AddScoped<IAuditLogService, AuditLogService>();
 
             // 7. OpenAPI & Scalar Documentation
             builder.Services.AddOpenApi();
@@ -95,6 +114,7 @@ namespace NineCafeApi
                 app.MapScalarApiReference();
             }
             app.UseHttpsRedirection();
+            app.UseCors("AllowFrontend");
             app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();

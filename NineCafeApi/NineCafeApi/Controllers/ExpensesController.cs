@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using NineCafeApi.Authorization;
 using NineCafeApi.DTOs.Expenses;
 using NineCafeApi.Services.Expenses;
 
@@ -6,6 +7,7 @@ namespace NineCafeApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [HasPermission(Perm.EXPENSE_READ)]
     public class ExpensesController : ControllerBase
     {
         private readonly IExpenseService _expenseService;
@@ -37,6 +39,7 @@ namespace NineCafeApi.Controllers
 
         // POST: api/expenses
         [HttpPost]
+        [HasPermission(Perm.EXPENSE_CREATE)]
         public async Task<ActionResult<ExpenseResponseDto>> CreateExpense([FromBody] ExpenseCreateDto dto)
         {
             try
@@ -52,6 +55,7 @@ namespace NineCafeApi.Controllers
 
         // PUT: api/expenses/5
         [HttpPut("{id:int}")]
+        [HasPermission(Perm.EXPENSE_UPDATE)]
         public async Task<ActionResult<ExpenseResponseDto>> UpdateExpense(int id, [FromBody] ExpenseCreateDto dto)
         {
             try
@@ -71,6 +75,7 @@ namespace NineCafeApi.Controllers
 
         // DELETE: api/expenses/5
         [HttpDelete("{id:int}")]
+        [HasPermission(Perm.EXPENSE_DELETE)]
         public async Task<IActionResult> DeleteExpense(int id)
         {
             var success = await _expenseService.DeleteAsync(id);

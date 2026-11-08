@@ -35,6 +35,7 @@ namespace NineCafeApi.Models
         // Navigation Property for UserRole
         public ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
         public ICollection<Expense> Expenses { get; set; } = new List<Expense>();
+        public ICollection<AuditLog> AuditLogs { get; set; } = new List<AuditLog>();
     }
 }
 

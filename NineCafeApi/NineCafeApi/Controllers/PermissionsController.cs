@@ -8,7 +8,7 @@ using NineCafeApi.Services.Permissions;
 
 [Route("api/[controller]")]
 [ApiController]
-// [HasPermission(Perm.PERMISSION_READ)]
+[HasPermission(Perm.PERMISSION_READ)]
 public class PermissionsController : ControllerBase
 {
     private readonly IPermissionService _permissionService;
@@ -48,7 +48,7 @@ public class PermissionsController : ControllerBase
 
     // POST: api/Permissions
     [HttpPost]
-    // [HasPermission(Perm.PERMISSION_CREATE)]
+    [HasPermission(Perm.PERMISSION_CREATE)]
     public async Task<ActionResult<PermissionResponseDto>> PostPermission([FromBody] CreatePermissionDto dto)
     {
         try
@@ -68,7 +68,7 @@ public class PermissionsController : ControllerBase
 
     // PUT: api/Permissions/5
     [HttpPut("{id}")]
-    // [HasPermission(Perm.PERMISSION_UPDATE)]
+    [HasPermission(Perm.PERMISSION_UPDATE)]
     public async Task<ActionResult<PermissionResponseDto>> PutPermission(int id, [FromBody] CreatePermissionDto dto)
     {
         try
@@ -92,7 +92,7 @@ public class PermissionsController : ControllerBase
 
     /// DELETE: api/Permissions/5
     [HttpDelete("{id}")]
-    // [HasPermission(Perm.PERMISSION_DELETE)]
+    [HasPermission(Perm.PERMISSION_DELETE)]
     public async Task<IActionResult> DeletePermission(int id)
     {
         var success = await _permissionService.DeleteAsync(id);

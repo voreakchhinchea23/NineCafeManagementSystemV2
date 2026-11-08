@@ -14,9 +14,18 @@ namespace NineCafeApi.Services.Withdrawals
             _context = context;
         }
 
-        public async Task<IEnumerable<WithdrawalResponseDto>> GetAllAsync()
+        public async Task<IEnumerable<WithdrawalResponseDto>> GetAllAsync(DateOnly? date = null)
         {
-            return await _context.Withdrawals
+            var query = _context.Withdrawals.AsQueryable();
+
+            if (date.HasValue)
+            {
+                query = query.Where(w => w.Date == date.Value);
+            }
+
+            return await query
+                .OrderByDescending(w => w.Date)
+                .ThenByDescending(w => w.Id)
                 .Select(w => new WithdrawalResponseDto
                 {
                     Id = w.Id,

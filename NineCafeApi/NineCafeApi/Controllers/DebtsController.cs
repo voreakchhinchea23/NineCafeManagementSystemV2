@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using NineCafeApi.Authorization;
 using NineCafeApi.DTOs.Debts;
 using NineCafeApi.Services.Debts;
 
@@ -6,6 +7,7 @@ namespace NineCafeApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [HasPermission(Perm.DEBT_READ)]
     public class DebtsController : ControllerBase
     {
         private readonly IDebtService _debtService;
@@ -37,6 +39,7 @@ namespace NineCafeApi.Controllers
 
         // POST: api/debts
         [HttpPost]
+        [HasPermission(Perm.DEBT_CREATE)]
         public async Task<ActionResult<DebtResponseDto>> CreateDebt([FromBody] DebtCreateDto dto)
         {
             var createdDebt = await _debtService.CreateAsync(dto);
@@ -45,6 +48,7 @@ namespace NineCafeApi.Controllers
 
         // PUT: api/debts/5
         [HttpPut("{id:int}")]
+        [HasPermission(Perm.DEBT_UPDATE)]
         public async Task<ActionResult<DebtResponseDto>> UpdateDebt(int id, [FromBody] DebtCreateDto dto)
         {
             var updatedDebt = await _debtService.UpdateAsync(id, dto);
@@ -57,6 +61,7 @@ namespace NineCafeApi.Controllers
 
         // PATCH: api/debts/5/pay
         [HttpPatch("{id:int}/pay")]
+        [HasPermission(Perm.DEBT_UPDATE)]
         public async Task<ActionResult<DebtResponseDto>> MarkDebtAsPaid(int id)
         {
             var updatedDebt = await _debtService.MarkAsPaidAsync(id);
@@ -69,6 +74,7 @@ namespace NineCafeApi.Controllers
 
         // DELETE: api/debts/5
         [HttpDelete("{id:int}")]
+        [HasPermission(Perm.DEBT_DELETE)]
         public async Task<IActionResult> DeleteDebt(int id)
         {
             var success = await _debtService.DeleteAsync(id);

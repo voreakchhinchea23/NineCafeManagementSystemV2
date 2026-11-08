@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using NineCafeApi.Authorization;
 using NineCafeApi.DTOs.Prices;
 using NineCafeApi.Services.Prices;
 
@@ -6,6 +7,7 @@ namespace NineCafeApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [HasPermission(Perm.PRICE_READ)]
     public class PricesController : ControllerBase
     {
         private readonly IPriceService _priceService;
@@ -37,6 +39,7 @@ namespace NineCafeApi.Controllers
 
         // POST: api/prices
         [HttpPost]
+        [HasPermission(Perm.PRICE_CREATE)]
         public async Task<ActionResult<PriceResponseDto>> CreatePrice([FromBody] CreatePriceDto dto)
         {
             try
@@ -52,6 +55,7 @@ namespace NineCafeApi.Controllers
 
         // PUT: api/prices/5
         [HttpPut("{id:int}")]
+        [HasPermission(Perm.PRICE_UPDATE)]
         public async Task<ActionResult<PriceResponseDto>> UpdatePrice(int id, [FromBody] CreatePriceDto dto)
         {
             try
@@ -71,6 +75,7 @@ namespace NineCafeApi.Controllers
 
         // DELETE: api/prices/5
         [HttpDelete("{id:int}")]
+        [HasPermission(Perm.PRICE_DELETE)]
         public async Task<IActionResult> DeletePrice(int id)
         {
             var success = await _priceService.DeleteAsync(id);

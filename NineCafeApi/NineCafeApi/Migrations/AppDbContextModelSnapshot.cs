@@ -22,6 +22,80 @@ namespace NineCafeApi.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("NineCafeApi.Models.AuditLog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("AfterData")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BeforeData")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EntityId")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("EntityType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AuditLogs");
+                });
+
+            modelBuilder.Entity("NineCafeApi.Models.DailySale", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PriceId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<DateOnly>("SaleDate")
+                        .HasColumnType("date");
+
+                    b.Property<int>("UnitPrice")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PriceId");
+
+                    b.ToTable("DailySales");
+                });
+
             modelBuilder.Entity("NineCafeApi.Models.Debt", b =>
                 {
                     b.Property<int>("Id")
@@ -241,6 +315,48 @@ namespace NineCafeApi.Migrations
                     b.ToTable("RolePermissions");
                 });
 
+            modelBuilder.Entity("NineCafeApi.Models.Supplier", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Address")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("ContactInfo")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Note")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("Product")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Suppliers");
+                });
+
             modelBuilder.Entity("NineCafeApi.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -359,6 +475,27 @@ namespace NineCafeApi.Migrations
                     b.ToTable("Withdrawals");
                 });
 
+            modelBuilder.Entity("NineCafeApi.Models.AuditLog", b =>
+                {
+                    b.HasOne("NineCafeApi.Models.User", "User")
+                        .WithMany("AuditLogs")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("NineCafeApi.Models.DailySale", b =>
+                {
+                    b.HasOne("NineCafeApi.Models.Price", "PriceRecord")
+                        .WithMany("DailySales")
+                        .HasForeignKey("PriceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("PriceRecord");
+                });
+
             modelBuilder.Entity("NineCafeApi.Models.Expense", b =>
                 {
                     b.HasOne("NineCafeApi.Models.User", "User")
@@ -429,6 +566,11 @@ namespace NineCafeApi.Migrations
                     b.Navigation("RolePermissions");
                 });
 
+            modelBuilder.Entity("NineCafeApi.Models.Price", b =>
+                {
+                    b.Navigation("DailySales");
+                });
+
             modelBuilder.Entity("NineCafeApi.Models.Role", b =>
                 {
                     b.Navigation("RolePermissions");
@@ -438,6 +580,8 @@ namespace NineCafeApi.Migrations
 
             modelBuilder.Entity("NineCafeApi.Models.User", b =>
                 {
+                    b.Navigation("AuditLogs");
+
                     b.Navigation("Expenses");
 
                     b.Navigation("UserRoles");

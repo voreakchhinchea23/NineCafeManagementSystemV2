@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace NineCafeApi.Models
 {
@@ -10,5 +10,8 @@ namespace NineCafeApi.Models
         public int PriceRiel { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+        // Navigation property for related DailySale records
+        public ICollection<DailySale> DailySales { get; set; } = new List<DailySale>();
     }
 }
