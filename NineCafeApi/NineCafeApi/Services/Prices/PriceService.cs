@@ -14,7 +14,7 @@ namespace NineCafeApi.Services.Prices
             _context = context;
         }
 
-        public async Task<IEnumerable<PriceResponseDto>> GetAllAsync()
+        public async Task<IEnumerable<PriceResponseDto>> GetAllPricesAsync()
         {
             return await _context.Prices
                 .OrderBy(p => p.PriceRiel)
@@ -28,7 +28,7 @@ namespace NineCafeApi.Services.Prices
                 .ToListAsync();
         }
 
-        public async Task<PriceResponseDto?> GetByIdAsync(int id)
+        public async Task<PriceResponseDto?> GetPriceByIdAsync(int id)
         {
             var price = await _context.Prices.FindAsync(id);
             if (price == null) return null;
@@ -42,7 +42,7 @@ namespace NineCafeApi.Services.Prices
             };
         }
 
-        public async Task<PriceResponseDto> CreateAsync(CreatePriceDto dto)
+        public async Task<PriceResponseDto> CreatePriceAsync(CreatePriceDto dto)
         {
             // Prevent duplicate price tiers
             var exists = await _context.Prices.AnyAsync(p => p.PriceRiel == dto.PriceRiel);
@@ -70,7 +70,7 @@ namespace NineCafeApi.Services.Prices
             };
         }
 
-        public async Task<PriceResponseDto?> UpdateAsync(int id, CreatePriceDto dto)
+        public async Task<PriceResponseDto?> UpdatePriceAsync(int id, CreatePriceDto dto)
         {
             var price = await _context.Prices.FindAsync(id);
             if (price == null) return null;
@@ -96,7 +96,7 @@ namespace NineCafeApi.Services.Prices
             };
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeletePriceAsync(int id)
         {
             var price = await _context.Prices.FindAsync(id);
             if (price == null) return false;

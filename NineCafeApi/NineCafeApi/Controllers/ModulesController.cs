@@ -21,7 +21,7 @@ public class ModulesController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<ModuleResponseDto>>> GetModule()
     {
-        var modules = await _moduleService.GetAllAsync();
+        var modules = await _moduleService.GetAllModulesAsync();
         return Ok(modules);
     }
 
@@ -29,7 +29,7 @@ public class ModulesController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<ModuleResponseDto>> GetModule(int id)
     {
-        var module = await _moduleService.GetByIdAsync(id);
+        var module = await _moduleService.GetModuleByIdAsync(id);
 
         if (module == null)
         {
@@ -44,7 +44,7 @@ public class ModulesController : ControllerBase
     [HasPermission(Perm.MODULE_UPDATE)]
     public async Task<ActionResult<ModuleResponseDto>> PutModule(int id, [FromBody] CreateModuleDto dto)
     {
-        var updatedModule = await _moduleService.UpdateAsync(id, dto);
+        var updatedModule = await _moduleService.UpdateModuleAsync(id, dto);
         if (updatedModule == null)
         {
             return NotFound($"Module with ID {id} was not found.");
@@ -59,7 +59,7 @@ public class ModulesController : ControllerBase
     {
         try
         {
-            var createdModule = await _moduleService.CreateAsync(dto);
+            var createdModule = await _moduleService.CreateModuleAsync(dto);
             return CreatedAtAction(nameof(GetModule), 
                 new { id = createdModule.Id }, createdModule);
         }
@@ -74,7 +74,7 @@ public class ModulesController : ControllerBase
     [HasPermission(Perm.MODULE_DELETE)]
     public async Task<IActionResult> DeleteModule(int id)
     {
-        var success = await _moduleService.DeleteAsync(id);
+        var success = await _moduleService.DeleteModuleAsync(id);
         if (!success)
         {
             return NotFound($"Module with ID {id} was not found.");

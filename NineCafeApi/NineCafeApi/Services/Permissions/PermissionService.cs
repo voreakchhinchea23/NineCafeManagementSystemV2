@@ -14,7 +14,7 @@ namespace NineCafeApi.Services.Permissions
             _context = context;
         }
 
-        public async Task<IEnumerable<PermissionResponseDto>> GetAllAsync()
+        public async Task<IEnumerable<PermissionResponseDto>> GetAllPermissionsAsync()
         {
             return await _context.Permissions
                 .Include(p => p.Module)
@@ -31,7 +31,7 @@ namespace NineCafeApi.Services.Permissions
                 .ToListAsync();
         }
 
-        public async Task<PermissionResponseDto?> GetByIdAsync(int id)
+        public async Task<PermissionResponseDto?> GetPermissionByIdAsync(int id)
         {
             var permission = await _context.Permissions
                 .Include(p => p.Module)
@@ -51,7 +51,7 @@ namespace NineCafeApi.Services.Permissions
             };
         }
 
-        public async Task<IEnumerable<PermissionResponseDto>> GetByModuleIdAsync(int moduleId)
+        public async Task<IEnumerable<PermissionResponseDto>> GetPermissionsByModuleIdAsync(int moduleId)
         {
             return await _context.Permissions
                 .Where(p => p.ModuleId == moduleId)
@@ -69,7 +69,7 @@ namespace NineCafeApi.Services.Permissions
                 .ToListAsync();
         }
 
-        public async Task<PermissionResponseDto> CreateAsync(CreatePermissionDto dto)
+        public async Task<PermissionResponseDto> CreatePermissionAsync(CreatePermissionDto dto)
         {
             // 1. Verify module exists
             var module = await _context.Modules.FindAsync(dto.ModuleId);
@@ -112,7 +112,7 @@ namespace NineCafeApi.Services.Permissions
             };
         }
 
-        public async Task<PermissionResponseDto?> UpdateAsync(int id, CreatePermissionDto dto)
+        public async Task<PermissionResponseDto?> UpdatePermissionAsync(int id, CreatePermissionDto dto)
         {
             var permission = await _context.Permissions.FindAsync(id);
             if (permission == null) return null;
@@ -153,7 +153,7 @@ namespace NineCafeApi.Services.Permissions
             };
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeletePermissionAsync(int id)
         {
             var permission = await _context.Permissions.FindAsync(id);
             if (permission == null) return false;

@@ -21,7 +21,7 @@ namespace NineCafeApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ExpenseResponseDto>>> GetExpenses()
         {
-            var expenses = await _expenseService.GetAllAsync();
+            var expenses = await _expenseService.GetAllExpensesAsync();
             return Ok(expenses);
         }
 
@@ -29,7 +29,7 @@ namespace NineCafeApi.Controllers
         [HttpGet("{id:int}")]
         public async Task<ActionResult<ExpenseResponseDto>> GetExpenseById(int id)
         {
-            var expense = await _expenseService.GetByIdAsync(id);
+            var expense = await _expenseService.GetExpenseByIdAsync(id);
             if (expense == null)
             {
                 return NotFound(new { message = $"Expense with ID {id} was not found." });
@@ -44,7 +44,7 @@ namespace NineCafeApi.Controllers
         {
             try
             {
-                var createdExpense = await _expenseService.CreateAsync(dto);
+                var createdExpense = await _expenseService.CreateExpenseAsync(dto);
                 return CreatedAtAction(nameof(GetExpenseById), new { id = createdExpense.Id }, createdExpense);
             }
             catch (KeyNotFoundException ex)
@@ -60,7 +60,7 @@ namespace NineCafeApi.Controllers
         {
             try
             {
-                var updatedExpense = await _expenseService.UpdateAsync(id, dto);
+                var updatedExpense = await _expenseService.UpdateExpenseAsync(id, dto);
                 if (updatedExpense == null)
                 {
                     return NotFound(new { message = $"Expense with ID {id} was not found." });
@@ -78,7 +78,7 @@ namespace NineCafeApi.Controllers
         [HasPermission(Perm.EXPENSE_DELETE)]
         public async Task<IActionResult> DeleteExpense(int id)
         {
-            var success = await _expenseService.DeleteAsync(id);
+            var success = await _expenseService.DeleteExpenseAsync(id);
             if (!success)
             {
                 return NotFound(new { message = $"Expense with ID {id} was not found." });

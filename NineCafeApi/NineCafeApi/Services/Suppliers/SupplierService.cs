@@ -14,7 +14,7 @@ namespace NineCafeApi.Services.Suppliers
             _context = context;
         }
 
-        public async Task<IEnumerable<SupplierResponseDto>> GetAllAsync()
+        public async Task<IEnumerable<SupplierResponseDto>> GetAllSuppliersAsync()
         {
             return await _context.Suppliers
                 .OrderBy(s => s.Name)
@@ -32,7 +32,7 @@ namespace NineCafeApi.Services.Suppliers
                 .ToListAsync();
         }
 
-        public async Task<SupplierResponseDto?> GetByIdAsync(int id)
+        public async Task<SupplierResponseDto?> GetSupplierByIdAsync(int id)
         {
             var supplier = await _context.Suppliers.FindAsync(id);
             if (supplier == null) return null;
@@ -50,7 +50,7 @@ namespace NineCafeApi.Services.Suppliers
             };
         }
 
-        public async Task<SupplierResponseDto> CreateAsync(SupplierCreateDto dto)
+        public async Task<SupplierResponseDto> CreateSupplierAsync(SupplierCreateDto dto)
         {
             var now = DateTime.UtcNow;
 
@@ -81,7 +81,7 @@ namespace NineCafeApi.Services.Suppliers
             };
         }
 
-        public async Task<SupplierResponseDto?> UpdateAsync(int id, SupplierCreateDto dto)
+        public async Task<SupplierResponseDto?> UpdateSupplierAsync(int id, SupplierCreateDto dto)
         {
             var supplier = await _context.Suppliers.FindAsync(id);
             if (supplier == null) return null;
@@ -108,7 +108,7 @@ namespace NineCafeApi.Services.Suppliers
             };
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteSupplierAsync(int id)
         {
             var supplier = await _context.Suppliers.FindAsync(id);
             if (supplier == null) return false;

@@ -24,7 +24,7 @@ namespace NineCafeApi.Controllers
             [FromQuery] string? entityType = null,
             [FromQuery] string? action = null)
         {
-            var logs = await _auditLogService.GetLogsAsync(limit, entityType, action);
+            var logs = await _auditLogService.GetAllAuditLogsAsync(limit, entityType, action);
             return Ok(logs);
         }
     }

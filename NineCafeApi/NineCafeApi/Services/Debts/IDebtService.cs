@@ -4,11 +4,11 @@ namespace NineCafeApi.Services.Debts
 {
     public interface IDebtService
     {
-        Task<IEnumerable<DebtResponseDto>> GetAllAsync();
-        Task<DebtResponseDto?> GetByIdAsync(int id);
-        Task<DebtResponseDto> CreateAsync(DebtCreateDto dto);
-        Task<DebtResponseDto?> UpdateAsync(int id, DebtCreateDto dto);
-        Task<DebtResponseDto?> MarkAsPaidAsync(int id);
-        Task<bool> DeleteAsync(int id);
+        Task<IEnumerable<DebtResponseDto>> GetAllDebtsAsync();
+        Task<DebtResponseDto?> GetDebtByIdAsync(int id);
+        Task<DebtResponseDto> CreateDebtAsync(DebtCreateDto dto);
+        Task<DebtResponseDto?> UpdateDebtAsync(int id, DebtCreateDto dto);
+        Task<DebtResponseDto?> MarkDebtAsPaidAsync(int id);
+        Task<bool> DeleteDebtAsync(int id);
     }
 }

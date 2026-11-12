@@ -4,10 +4,10 @@ namespace NineCafeApi.Services.Withdrawals
 {
     public interface IWithdrawalService
     {
-        Task<IEnumerable<WithdrawalResponseDto>> GetAllAsync(DateOnly? date = null);
-        Task<WithdrawalResponseDto?> GetByIdAsync(int id);
-        Task<WithdrawalResponseDto> CreateAsync(WithdrawalCreateDto dto);
-        Task<WithdrawalResponseDto?> UpdateAsync(int id, WithdrawalCreateDto dto);
-        Task<bool> DeleteAsync(int id);
+        Task<IEnumerable<WithdrawalResponseDto>> GetAllWithdrawalsAsync(DateOnly? date = null);
+        Task<WithdrawalResponseDto?> GetWithdrawalByIdAsync(int id);
+        Task<WithdrawalResponseDto> CreateWithdrawalAsync(WithdrawalCreateDto dto);
+        Task<WithdrawalResponseDto?> UpdateWithdrawalAsync(int id, WithdrawalCreateDto dto);
+        Task<bool> DeleteWithdrawalAsync(int id);
     }
 }

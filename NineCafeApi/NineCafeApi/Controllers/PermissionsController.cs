@@ -21,7 +21,7 @@ public class PermissionsController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<PermissionResponseDto>>> GetPermissions()
     {
-        var permissions = await _permissionService.GetAllAsync();
+        var permissions = await _permissionService.GetAllPermissionsAsync();
         return Ok(permissions);
     }
 
@@ -29,7 +29,7 @@ public class PermissionsController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<PermissionResponseDto>> GetPermission(int id)
     {
-        var permission = await _permissionService.GetByIdAsync(id);
+        var permission = await _permissionService.GetPermissionByIdAsync(id);
         if (permission == null)
         {
             return NotFound($"Permission with ID {id} was not found.");
@@ -41,7 +41,7 @@ public class PermissionsController : ControllerBase
     [HttpGet("module/{moduleId}")]
     public async Task<ActionResult<IEnumerable<PermissionResponseDto>>> GetPermissionsByModule(int moduleId)
     {
-        var permissions = await _permissionService.GetByModuleIdAsync(moduleId);
+        var permissions = await _permissionService.GetPermissionsByModuleIdAsync(moduleId);
         return Ok(permissions);
 
     }
@@ -53,7 +53,7 @@ public class PermissionsController : ControllerBase
     {
         try
         {
-            var createdPermission = await _permissionService.CreateAsync(dto);
+            var createdPermission = await _permissionService.CreatePermissionAsync(dto);
             return CreatedAtAction(nameof(GetPermission), new { id = createdPermission.Id }, createdPermission);
         }
         catch (KeyNotFoundException ex)
@@ -73,7 +73,7 @@ public class PermissionsController : ControllerBase
     {
         try
         {
-            var updatedPermission = await _permissionService.UpdateAsync(id, dto);
+            var updatedPermission = await _permissionService.UpdatePermissionAsync(id, dto);
             if (updatedPermission == null)
             {
                 return NotFound($"Permission with ID {id} was not found.");
@@ -95,7 +95,7 @@ public class PermissionsController : ControllerBase
     [HasPermission(Perm.PERMISSION_DELETE)]
     public async Task<IActionResult> DeletePermission(int id)
     {
-        var success = await _permissionService.DeleteAsync(id);
+        var success = await _permissionService.DeletePermissionAsync(id);
         if (!success)
         {
             return NotFound($"Permission with ID {id} was not found.");

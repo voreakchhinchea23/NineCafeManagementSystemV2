@@ -14,7 +14,7 @@ namespace NineCafeApi.Services.Debts
             _context = context;
         }
 
-        public async Task<IEnumerable<DebtResponseDto>> GetAllAsync()
+        public async Task<IEnumerable<DebtResponseDto>> GetAllDebtsAsync()
         {
             return await _context.Debts
                 .Select(d => new DebtResponseDto
@@ -31,7 +31,7 @@ namespace NineCafeApi.Services.Debts
                 .ToListAsync();
         }
 
-        public async Task<DebtResponseDto?> GetByIdAsync(int id)
+        public async Task<DebtResponseDto?> GetDebtByIdAsync(int id)
         {
             var debt = await _context.Debts.FindAsync(id);
             if (debt == null) return null;
@@ -49,7 +49,7 @@ namespace NineCafeApi.Services.Debts
             };
         }
 
-        public async Task<DebtResponseDto> CreateAsync(DebtCreateDto dto)
+        public async Task<DebtResponseDto> CreateDebtAsync(DebtCreateDto dto)
         {
             var now = DateTime.UtcNow;
 
@@ -80,7 +80,7 @@ namespace NineCafeApi.Services.Debts
             };
         }
 
-        public async Task<DebtResponseDto?> UpdateAsync(int id, DebtCreateDto dto)
+        public async Task<DebtResponseDto?> UpdateDebtAsync(int id, DebtCreateDto dto)
         {
             var debt = await _context.Debts.FindAsync(id);
             if (debt == null) return null;
@@ -117,7 +117,7 @@ namespace NineCafeApi.Services.Debts
             };
         }
 
-        public async Task<DebtResponseDto?> MarkAsPaidAsync(int id)
+        public async Task<DebtResponseDto?> MarkDebtAsPaidAsync(int id)
         {
             var debt = await _context.Debts.FindAsync(id);
             if (debt == null) return null;
@@ -144,7 +144,7 @@ namespace NineCafeApi.Services.Debts
             };
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteDebtAsync(int id)
         {
             var debt = await _context.Debts.FindAsync(id);
             if (debt == null) return false;

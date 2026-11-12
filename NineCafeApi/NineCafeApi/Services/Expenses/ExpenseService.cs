@@ -14,7 +14,7 @@ namespace NineCafeApi.Services.Expenses
             _context = context;
         }
 
-        public async Task<IEnumerable<ExpenseResponseDto>> GetAllAsync()
+        public async Task<IEnumerable<ExpenseResponseDto>> GetAllExpensesAsync()
         {
             return await _context.Expenses
                 .Include(e => e.User)
@@ -33,7 +33,7 @@ namespace NineCafeApi.Services.Expenses
                 .ToListAsync();
         }
 
-        public async Task<ExpenseResponseDto?> GetByIdAsync(int id)
+        public async Task<ExpenseResponseDto?> GetExpenseByIdAsync(int id)
         {
             var expense = await _context.Expenses
                 .Include(e => e.User)
@@ -55,7 +55,7 @@ namespace NineCafeApi.Services.Expenses
             };
         }
 
-        public async Task<ExpenseResponseDto> CreateAsync(ExpenseCreateDto dto)
+        public async Task<ExpenseResponseDto> CreateExpenseAsync(ExpenseCreateDto dto)
         {
             var user = await _context.Users
                 .FirstOrDefaultAsync(u => u.PublicId == dto.UserPublicId);
@@ -95,7 +95,7 @@ namespace NineCafeApi.Services.Expenses
             };
         }
 
-        public async Task<ExpenseResponseDto?> UpdateAsync(int id, ExpenseCreateDto dto)
+        public async Task<ExpenseResponseDto?> UpdateExpenseAsync(int id, ExpenseCreateDto dto)
         {
             var expense = await _context.Expenses.FindAsync(id);
             if (expense == null) return null;
@@ -131,7 +131,7 @@ namespace NineCafeApi.Services.Expenses
             };
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteExpenseAsync(int id)
         {
             var expense = await _context.Expenses.FindAsync(id);
             if (expense == null) return false;

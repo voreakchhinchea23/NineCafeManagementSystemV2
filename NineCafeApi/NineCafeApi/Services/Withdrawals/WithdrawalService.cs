@@ -14,7 +14,7 @@ namespace NineCafeApi.Services.Withdrawals
             _context = context;
         }
 
-        public async Task<IEnumerable<WithdrawalResponseDto>> GetAllAsync(DateOnly? date = null)
+        public async Task<IEnumerable<WithdrawalResponseDto>> GetAllWithdrawalsAsync(DateOnly? date = null)
         {
             var query = _context.Withdrawals.AsQueryable();
 
@@ -38,7 +38,7 @@ namespace NineCafeApi.Services.Withdrawals
                 .ToListAsync();
         }
 
-        public async Task<WithdrawalResponseDto?> GetByIdAsync(int id)
+        public async Task<WithdrawalResponseDto?> GetWithdrawalByIdAsync(int id)
         {
             var withdrawal = await _context.Withdrawals.FindAsync(id);
             if (withdrawal == null) return null;
@@ -54,7 +54,7 @@ namespace NineCafeApi.Services.Withdrawals
             };
         }
 
-        public async Task<WithdrawalResponseDto> CreateAsync(WithdrawalCreateDto dto)
+        public async Task<WithdrawalResponseDto> CreateWithdrawalAsync(WithdrawalCreateDto dto)
         {
             var withdrawal = new Withdrawal
             {
@@ -79,7 +79,7 @@ namespace NineCafeApi.Services.Withdrawals
             };
         }
 
-        public async Task<WithdrawalResponseDto?> UpdateAsync(int id, WithdrawalCreateDto dto)
+        public async Task<WithdrawalResponseDto?> UpdateWithdrawalAsync(int id, WithdrawalCreateDto dto)
         {
             var withdrawal = await _context.Withdrawals.FindAsync(id);
             if (withdrawal == null) return null;
@@ -102,7 +102,7 @@ namespace NineCafeApi.Services.Withdrawals
             };
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteWithdrawalAsync(int id)
         {
             var withdrawal = await _context.Withdrawals.FindAsync(id);
             if (withdrawal == null) return false;

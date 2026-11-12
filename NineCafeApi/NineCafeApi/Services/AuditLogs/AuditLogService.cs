@@ -13,7 +13,7 @@ namespace NineCafeApi.Services.AuditLogs
             _context = context;
         }
 
-        public async Task<IEnumerable<AuditLogResponseDto>> GetLogsAsync(
+        public async Task<IEnumerable<AuditLogResponseDto>> GetAllAuditLogsAsync(
             int limit = 100,
             string? entityType = null,
             string? action = null)

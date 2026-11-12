@@ -141,7 +141,7 @@ namespace NineCafeApi.Controllers
         [HttpGet("withdrawals")]
         public async Task<ActionResult<IEnumerable<WithdrawalResponseDto>>> GetWithdrawals([FromQuery] DateOnly? date = null)
         {
-            var withdrawals = await _withdrawalService.GetAllAsync(date);
+            var withdrawals = await _withdrawalService.GetAllWithdrawalsAsync(date);
             return Ok(withdrawals);
         }
 
@@ -149,7 +149,7 @@ namespace NineCafeApi.Controllers
         [HttpGet("withdrawals/{id:int}")]
         public async Task<ActionResult<WithdrawalResponseDto>> GetWithdrawalById(int id)
         {
-            var withdrawal = await _withdrawalService.GetByIdAsync(id);
+            var withdrawal = await _withdrawalService.GetWithdrawalByIdAsync(id);
             if (withdrawal == null)
             {
                 return NotFound(new { message = $"Withdrawal with ID {id} was not found." });
@@ -162,7 +162,7 @@ namespace NineCafeApi.Controllers
         [HasPermission(Perm.DASHBOARD_CREATE)]
         public async Task<ActionResult<WithdrawalResponseDto>> RecordWithdrawal([FromBody] WithdrawalCreateDto dto)
         {
-            var createdWithdrawal = await _withdrawalService.CreateAsync(dto);
+            var createdWithdrawal = await _withdrawalService.CreateWithdrawalAsync(dto);
             return CreatedAtAction(nameof(GetWithdrawalById), new { id = createdWithdrawal.Id }, createdWithdrawal);
         }
 
@@ -171,7 +171,7 @@ namespace NineCafeApi.Controllers
         [HasPermission(Perm.DASHBOARD_UPDATE)]
         public async Task<ActionResult<WithdrawalResponseDto>> UpdateWithdrawal(int id, [FromBody] WithdrawalCreateDto dto)
         {
-            var updatedWithdrawal = await _withdrawalService.UpdateAsync(id, dto);
+            var updatedWithdrawal = await _withdrawalService.UpdateWithdrawalAsync(id, dto);
             if (updatedWithdrawal == null)
             {
                 return NotFound(new { message = $"Withdrawal with ID {id} was not found." });
@@ -184,7 +184,7 @@ namespace NineCafeApi.Controllers
         [HasPermission(Perm.DASHBOARD_DELETE)]
         public async Task<IActionResult> DeleteWithdrawal(int id)
         {
-            var success = await _withdrawalService.DeleteAsync(id);
+            var success = await _withdrawalService.DeleteWithdrawalAsync(id);
             if (!success)
             {
                 return NotFound(new { message = $"Withdrawal with ID {id} was not found." });

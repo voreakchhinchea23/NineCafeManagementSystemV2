@@ -4,10 +4,10 @@ namespace NineCafeApi.Services.Suppliers
 {
     public interface ISupplierService
     {
-        Task<IEnumerable<SupplierResponseDto>> GetAllAsync();
-        Task<SupplierResponseDto?> GetByIdAsync(int id);
-        Task<SupplierResponseDto> CreateAsync(SupplierCreateDto dto);
-        Task<SupplierResponseDto?> UpdateAsync(int id, SupplierCreateDto dto);
-        Task<bool> DeleteAsync(int id);
+        Task<IEnumerable<SupplierResponseDto>> GetAllSuppliersAsync();
+        Task<SupplierResponseDto?> GetSupplierByIdAsync(int id);
+        Task<SupplierResponseDto> CreateSupplierAsync(SupplierCreateDto dto);
+        Task<SupplierResponseDto?> UpdateSupplierAsync(int id, SupplierCreateDto dto);
+        Task<bool> DeleteSupplierAsync(int id);
     }
 }

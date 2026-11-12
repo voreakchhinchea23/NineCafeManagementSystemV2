@@ -21,7 +21,7 @@ namespace NineCafeApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PriceResponseDto>>> GetPrices()
         {
-            var prices = await _priceService.GetAllAsync();
+            var prices = await _priceService.GetAllPricesAsync();
             return Ok(prices);
         }
 
@@ -29,7 +29,7 @@ namespace NineCafeApi.Controllers
         [HttpGet("{id:int}")]
         public async Task<ActionResult<PriceResponseDto>> GetPriceById(int id)
         {
-            var price = await _priceService.GetByIdAsync(id);
+            var price = await _priceService.GetPriceByIdAsync(id);
             if (price == null)
             {
                 return NotFound(new { message = $"Price with ID {id} was not found." });
@@ -44,7 +44,7 @@ namespace NineCafeApi.Controllers
         {
             try
             {
-                var createdPrice = await _priceService.CreateAsync(dto);
+                var createdPrice = await _priceService.CreatePriceAsync(dto);
                 return CreatedAtAction(nameof(GetPriceById), new { id = createdPrice.Id }, createdPrice);
             }
             catch (InvalidOperationException ex)
@@ -60,7 +60,7 @@ namespace NineCafeApi.Controllers
         {
             try
             {
-                var updatedPrice = await _priceService.UpdateAsync(id, dto);
+                var updatedPrice = await _priceService.UpdatePriceAsync(id, dto);
                 if (updatedPrice == null)
                 {
                     return NotFound(new { message = $"Price with ID {id} was not found." });
@@ -78,7 +78,7 @@ namespace NineCafeApi.Controllers
         [HasPermission(Perm.PRICE_DELETE)]
         public async Task<IActionResult> DeletePrice(int id)
         {
-            var success = await _priceService.DeleteAsync(id);
+            var success = await _priceService.DeletePriceAsync(id);
             if (!success)
             {
                 return NotFound(new { message = $"Price with ID {id} was not found." });

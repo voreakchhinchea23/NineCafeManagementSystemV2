@@ -14,7 +14,7 @@ namespace NineCafeApi.Services.Modules
             _context = context;
         }
 
-        public async Task<IEnumerable<ModuleResponseDto>> GetAllAsync()
+        public async Task<IEnumerable<ModuleResponseDto>> GetAllModulesAsync()
         {
             return await _context.Modules
                 .Select(m => new ModuleResponseDto
@@ -28,7 +28,7 @@ namespace NineCafeApi.Services.Modules
                 .ToListAsync();
         }
 
-        public async Task<ModuleResponseDto?> GetByIdAsync(int id)
+        public async Task<ModuleResponseDto?> GetModuleByIdAsync(int id)
         {
             var module = await _context.Modules.FindAsync(id);
             if (module == null) return null;
@@ -43,7 +43,7 @@ namespace NineCafeApi.Services.Modules
             };
         }
 
-        public async Task<ModuleResponseDto> CreateAsync(CreateModuleDto dto)
+        public async Task<ModuleResponseDto> CreateModuleAsync(CreateModuleDto dto)
         {
             var module = new Module
             {
@@ -66,7 +66,7 @@ namespace NineCafeApi.Services.Modules
             };
         }
 
-        public async Task<ModuleResponseDto?> UpdateAsync(int id, CreateModuleDto dto)
+        public async Task<ModuleResponseDto?> UpdateModuleAsync(int id, CreateModuleDto dto)
         {
             var module = await _context.Modules.FindAsync(id);
             if (module == null) return null;
@@ -87,7 +87,7 @@ namespace NineCafeApi.Services.Modules
             };
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteModuleAsync(int id)
         {
             var module = await _context.Modules.FindAsync(id);
             if (module == null) return false;

@@ -21,7 +21,7 @@ namespace NineCafeApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<SupplierResponseDto>>> GetSuppliers()
         {
-            var suppliers = await _supplierService.GetAllAsync();
+            var suppliers = await _supplierService.GetAllSuppliersAsync();
             return Ok(suppliers);
         }
 
@@ -29,7 +29,7 @@ namespace NineCafeApi.Controllers
         [HttpGet("{id:int}")]
         public async Task<ActionResult<SupplierResponseDto>> GetSupplierById(int id)
         {
-            var supplier = await _supplierService.GetByIdAsync(id);
+            var supplier = await _supplierService.GetSupplierByIdAsync(id);
             if (supplier == null)
             {
                 return NotFound(new { message = $"Supplier with ID {id} was not found." });
@@ -42,7 +42,7 @@ namespace NineCafeApi.Controllers
         [HasPermission(Perm.SUPPLIER_CREATE)]
         public async Task<ActionResult<SupplierResponseDto>> CreateSupplier([FromBody] SupplierCreateDto dto)
         {
-            var createdSupplier = await _supplierService.CreateAsync(dto);
+            var createdSupplier = await _supplierService.CreateSupplierAsync(dto);
             return CreatedAtAction(nameof(GetSupplierById), new { id = createdSupplier.Id }, createdSupplier);
         }
 
@@ -51,7 +51,7 @@ namespace NineCafeApi.Controllers
         [HasPermission(Perm.SUPPLIER_UPDATE)]
         public async Task<ActionResult<SupplierResponseDto>> UpdateSupplier(int id, [FromBody] SupplierCreateDto dto)
         {
-            var updatedSupplier = await _supplierService.UpdateAsync(id, dto);
+            var updatedSupplier = await _supplierService.UpdateSupplierAsync(id, dto);
             if (updatedSupplier == null)
             {
                 return NotFound(new { message = $"Supplier with ID {id} was not found." });
@@ -64,7 +64,7 @@ namespace NineCafeApi.Controllers
         [HasPermission(Perm.SUPPLIER_DELETE)]
         public async Task<IActionResult> DeleteSupplier(int id)
         {
-            var success = await _supplierService.DeleteAsync(id);
+            var success = await _supplierService.DeleteSupplierAsync(id);
             if (!success)
             {
                 return NotFound(new { message = $"Supplier with ID {id} was not found." });

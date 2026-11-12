@@ -21,7 +21,7 @@ namespace NineCafeApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DebtResponseDto>>> GetDebts()
         {
-            var debts = await _debtService.GetAllAsync();
+            var debts = await _debtService.GetAllDebtsAsync();
             return Ok(debts);
         }
 
@@ -29,7 +29,7 @@ namespace NineCafeApi.Controllers
         [HttpGet("{id:int}")]
         public async Task<ActionResult<DebtResponseDto>> GetDebtById(int id)
         {
-            var debt = await _debtService.GetByIdAsync(id);
+            var debt = await _debtService.GetDebtByIdAsync(id);
             if (debt == null)
             {
                 return NotFound(new { message = $"Debt with ID {id} was not found." });
@@ -42,7 +42,7 @@ namespace NineCafeApi.Controllers
         [HasPermission(Perm.DEBT_CREATE)]
         public async Task<ActionResult<DebtResponseDto>> CreateDebt([FromBody] DebtCreateDto dto)
         {
-            var createdDebt = await _debtService.CreateAsync(dto);
+            var createdDebt = await _debtService.CreateDebtAsync(dto);
             return CreatedAtAction(nameof(GetDebtById), new { id = createdDebt.Id }, createdDebt);
         }
 
@@ -51,7 +51,7 @@ namespace NineCafeApi.Controllers
         [HasPermission(Perm.DEBT_UPDATE)]
         public async Task<ActionResult<DebtResponseDto>> UpdateDebt(int id, [FromBody] DebtCreateDto dto)
         {
-            var updatedDebt = await _debtService.UpdateAsync(id, dto);
+            var updatedDebt = await _debtService.UpdateDebtAsync(id, dto);
             if (updatedDebt == null)
             {
                 return NotFound(new { message = $"Debt with ID {id} was not found." });
@@ -64,7 +64,7 @@ namespace NineCafeApi.Controllers
         [HasPermission(Perm.DEBT_UPDATE)]
         public async Task<ActionResult<DebtResponseDto>> MarkDebtAsPaid(int id)
         {
-            var updatedDebt = await _debtService.MarkAsPaidAsync(id);
+            var updatedDebt = await _debtService.MarkDebtAsPaidAsync(id);
             if (updatedDebt == null)
             {
                 return NotFound(new { message = $"Debt with ID {id} was not found." });
@@ -77,7 +77,7 @@ namespace NineCafeApi.Controllers
         [HasPermission(Perm.DEBT_DELETE)]
         public async Task<IActionResult> DeleteDebt(int id)
         {
-            var success = await _debtService.DeleteAsync(id);
+            var success = await _debtService.DeleteDebtAsync(id);
             if (!success)
             {
                 return NotFound(new { message = $"Debt with ID {id} was not found." });
