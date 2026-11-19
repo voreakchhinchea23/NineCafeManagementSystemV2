@@ -10,7 +10,7 @@ Designed specifically for daily cafe operations—tracking bean/cup sales in Cam
 
 ```text
 NineCafeManagementSystem/
-├── NineCafeApi/
+├── Backend/
 │   └── NineCafeApi/               # ASP.NET Core Web API (.NET 10)
 │       ├── Authorization/         # Dynamic Policy Provider, Handler & Perm Constants
 │       ├── Controllers/           # 11 RESTful API Controllers protected by [HasPermission]
@@ -135,7 +135,7 @@ Implements a 6-table security model (`Users`, `Roles`, `Permissions`, `Modules`,
 1. **Clone the repository:**
    ```bash
    git clone https://github.com/voreakchhinchea23/NineCafeManagementSystemV2.git
-   cd NineCafeManagementSystemV2/NineCafeApi/NineCafeApi
+   cd NineCafeManagementSystemV2/Backend/NineCafeApi
    ```
 2. **Configure Database & JWT in `appsettings.json`:**
    ```json
