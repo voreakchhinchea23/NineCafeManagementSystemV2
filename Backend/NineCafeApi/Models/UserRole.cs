@@ -9,5 +9,7 @@
 
         public int RoleId { get; set; }
         public Role? Role { get; set; }
+
+        public DateTime AssignedAt { get; set; } = DateTime.UtcNow;
     }
 }

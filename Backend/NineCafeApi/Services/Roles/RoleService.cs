@@ -161,21 +161,37 @@ namespace NineCafeApi.Services.Roles
             if (role == null) return false;
 
             // Only grab valid permission IDs from database
-            var validPermissionIds = await _context.Permissions
+            var validPermissionIds = (await _context.Permissions
                 .Where(p => dto.PermissionIds.Contains(p.Id))
                 .Select(p => p.Id)
-                .ToListAsync();
+                .ToListAsync())
+                .ToHashSet();
 
-            // Clear previous mappings and add new ones
-            role.RolePermissions.Clear();
+            // Remove deselected mappings while keeping existing ones so their AssignedAt is preserved
+            var toRemove = role.RolePermissions
+                .Where(rp => !validPermissionIds.Contains(rp.PermissionId))
+                .ToList();
+
+            if (toRemove.Count > 0)
+            {
+                _context.RolePermissions.RemoveRange(toRemove);
+            }
+
+            var existingPermissionIds = role.RolePermissions
+                .Select(rp => rp.PermissionId)
+                .ToHashSet();
 
             foreach (var permId in validPermissionIds)
             {
-                role.RolePermissions.Add(new RolePermission
+                if (!existingPermissionIds.Contains(permId))
                 {
-                    RoleId = role.Id,
-                    PermissionId = permId
-                });
+                    role.RolePermissions.Add(new RolePermission
+                    {
+                        RoleId = role.Id,
+                        PermissionId = permId,
+                        AssignedAt = DateTime.UtcNow
+                    });
+                }
             }
 
             role.UpdatedAt = DateTime.UtcNow;

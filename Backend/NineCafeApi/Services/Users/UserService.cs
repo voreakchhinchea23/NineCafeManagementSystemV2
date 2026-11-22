@@ -186,11 +186,16 @@ namespace NineCafeApi.Services.Users
             var existingUserRole = user.UserRoles.FirstOrDefault();
             if (existingUserRole == null)
             {
-                user.UserRoles.Add(new UserRole { RoleId = dto.RoleId });
+                user.UserRoles.Add(new UserRole
+                {
+                    RoleId = dto.RoleId,
+                    AssignedAt = DateTime.UtcNow
+                });
             }
-            else
+            else if (existingUserRole.RoleId != dto.RoleId)
             {
                 existingUserRole.RoleId = dto.RoleId;
+                existingUserRole.AssignedAt = DateTime.UtcNow;
             }
 
             user.Username = trimmedUsername;

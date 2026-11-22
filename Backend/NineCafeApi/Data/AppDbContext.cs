@@ -67,6 +67,10 @@ namespace NineCafeApi.Data
                 .HasForeignKey(rp => rp.PermissionId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<RolePermission>()
+                .Property(rp => rp.AssignedAt)
+                .HasDefaultValueSql("GETUTCDATE()");
+
             // ==========================================
             // 2. UserRole (User <-> Role)
             // ==========================================
@@ -89,6 +93,10 @@ namespace NineCafeApi.Data
                 .WithMany(r => r.UserRoles)
                 .HasForeignKey(ur => ur.RoleId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<UserRole>()
+                .Property(ur => ur.AssignedAt)
+                .HasDefaultValueSql("GETUTCDATE()");
 
             // ==========================================
             // 3. Unique Constraints & Defaults

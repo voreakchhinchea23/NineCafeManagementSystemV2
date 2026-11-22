@@ -8,6 +8,8 @@
 
         public int PermissionId { get; set; }
         public Permission? Permission { get; set; }
+
+        public DateTime AssignedAt { get; set; } = DateTime.UtcNow;
     }
 }
 
