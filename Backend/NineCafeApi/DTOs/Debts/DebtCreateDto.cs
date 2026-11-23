@@ -14,6 +14,9 @@ namespace NineCafeApi.DTOs.Debts
 
         public DateOnly Date { get; set; } = DateOnly.FromDateTime(DateTime.Today);
 
+        [StringLength(255)]
+        public string? Note { get; set; }
+
         public bool IsPaid { get; set; } = false;
     }
 }

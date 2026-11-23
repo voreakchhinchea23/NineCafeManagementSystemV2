@@ -121,6 +121,10 @@ namespace NineCafeApi.Migrations
                     b.Property<bool>("IsPaid")
                         .HasColumnType("bit");
 
+                    b.Property<string>("Note")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
                     b.Property<DateTime?>("PaidAt")
                         .HasColumnType("datetime2");
 

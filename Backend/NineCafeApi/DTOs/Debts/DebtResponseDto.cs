@@ -6,6 +6,7 @@ namespace NineCafeApi.DTOs.Debts
         public string CustomerName { get; set; } = string.Empty;
         public decimal Amount { get; set; }
         public DateOnly Date { get; set; }
+        public string? Note { get; set; }
         public bool IsPaid { get; set; }
         public DateTime? PaidAt { get; set; }
         public DateTime CreatedAt { get; set; }

@@ -23,6 +23,7 @@ namespace NineCafeApi.Services.Debts
                     CustomerName = d.CustomerName,
                     Amount = d.Amount,
                     Date = d.Date,
+                    Note = d.Note,
                     IsPaid = d.IsPaid,
                     PaidAt = d.PaidAt,
                     CreatedAt = d.CreatedAt,
@@ -42,6 +43,7 @@ namespace NineCafeApi.Services.Debts
                 CustomerName = debt.CustomerName,
                 Amount = debt.Amount,
                 Date = debt.Date,
+                Note = debt.Note,
                 IsPaid = debt.IsPaid,
                 PaidAt = debt.PaidAt,
                 CreatedAt = debt.CreatedAt,
@@ -58,6 +60,7 @@ namespace NineCafeApi.Services.Debts
                 CustomerName = dto.CustomerName,
                 Amount = dto.Amount,
                 Date = dto.Date,
+                Note = string.IsNullOrWhiteSpace(dto.Note) ? null : dto.Note.Trim(),
                 IsPaid = dto.IsPaid,
                 PaidAt = dto.IsPaid ? now : null,
                 CreatedAt = now,
@@ -73,6 +76,7 @@ namespace NineCafeApi.Services.Debts
                 CustomerName = debt.CustomerName,
                 Amount = debt.Amount,
                 Date = debt.Date,
+                Note = debt.Note,
                 IsPaid = debt.IsPaid,
                 PaidAt = debt.PaidAt,
                 CreatedAt = debt.CreatedAt,
@@ -99,6 +103,7 @@ namespace NineCafeApi.Services.Debts
             debt.CustomerName = dto.CustomerName;
             debt.Amount = dto.Amount;
             debt.Date = dto.Date;
+            debt.Note = string.IsNullOrWhiteSpace(dto.Note) ? null : dto.Note.Trim();
             debt.IsPaid = dto.IsPaid;
             debt.UpdatedAt = now;
 
@@ -110,6 +115,7 @@ namespace NineCafeApi.Services.Debts
                 CustomerName = debt.CustomerName,
                 Amount = debt.Amount,
                 Date = debt.Date,
+                Note = debt.Note,
                 IsPaid = debt.IsPaid,
                 PaidAt = debt.PaidAt,
                 CreatedAt = debt.CreatedAt,
@@ -137,6 +143,7 @@ namespace NineCafeApi.Services.Debts
                 CustomerName = debt.CustomerName,
                 Amount = debt.Amount,
                 Date = debt.Date,
+                Note = debt.Note,
                 IsPaid = debt.IsPaid,
                 PaidAt = debt.PaidAt,
                 CreatedAt = debt.CreatedAt,
